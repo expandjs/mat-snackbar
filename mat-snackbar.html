@@ -192,7 +192,7 @@ An element used to display a Material Design snackbar.
                 event.stopPropagation();
 
                 // Overriding
-                if (this.fire(event.type, XP.assign(event.detail, {firer: this}), {cancelable: true}).defaultPrevented) { event.preventDefault(); }
+                if (this.fire(event.type, XP.assign(event.detail, {firer: this}), {cancelable: true}).defaultPrevented) { event.preventDefault(); } else { this.hide(); }
             }
         });
     </script>
