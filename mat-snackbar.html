@@ -103,7 +103,7 @@ An element used to display a Material Design snackbar.
 
         <div id="matSnackbarWrapper">
             <div id="matSnackbarLabel">{{label}}</div>
-            <template is="dom-if" if="[[actionText]]"><mat-button id="matSnackbarAction" color="[[_computeActionColor(actionColor)]]" data="[[data]]" label="[[actionLabel]]" target="[[target]]" on-xp-activate="_handleAction"></mat-button></template>
+            <template is="dom-if" if="[[actionLabel]]"><mat-button id="matSnackbarAction" color="[[_computeActionColor(actionColor)]]" data="[[data]]" label="[[actionLabel]]" target="[[target]]" on-xp-activate="_handleAction"></mat-button></template>
         </div>
 
     </template>
