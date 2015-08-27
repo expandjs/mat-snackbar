@@ -19,7 +19,7 @@ An element used to display a Material Design snackbar.
 
 @behavior xp-toast-behavior /bower_components/xp-toast-behavior/xp-toast-behavior.html
 
-@dependency polymer Polymer/polymer#^1.0.0
+@dependency polymer Polymer/polymer#^1.1.0
 @dependency expandjs ExpandJS/expandjs#0.9.8
 @dependency mat-typography ExpandJS/mat-typography#0.9.8
 @dependency xp-toast-behavior ExpandJS/xp-toast-behavior#0.9.8
@@ -38,6 +38,8 @@ An element used to display a Material Design snackbar.
 
     <template>
 
+        <style include="xp-toast-styles"></style>
+
         <style>
             :host {
                 @apply(--mat-font-body);
@@ -45,29 +47,13 @@ An element used to display a Material Design snackbar.
                 bottom: 0;
                 box-sizing: border-box;
                 color: hsla(0, 0%, 95%, 1);
-                display: block;
                 left: 0;
                 max-height: 80px;
                 min-height: 48px;
-                overflow: hidden;
                 padding: 14px 24px;
-                position: fixed;
                 right: 0;
-                -webkit-transform: translate(0, 100px);
-                transform: translate(0, 100px);
-                -webkit-transition: -webkit-transform 0.5s;
-                transition: transform 0.5s;
-                will-change: -webkit-transform, transform;
-                z-index: 9999;
-            }
-
-            :host([showed]) {
-                -webkit-transform: translate(0, 0);
-                transform: translate(0, 0);
-            }
-
-            :host(:not([showed])) {
-                display: none !important;
+                -webkit-transform: translate(0, 100%);
+                transform: translate(0, 100%);
             }
 
             :host #matSnackbarWrapper {
@@ -100,8 +86,8 @@ An element used to display a Material Design snackbar.
                     max-width: 568px;
                     min-width: 288px;
                     right: auto;
-                    -webkit-transform: translate(-50%, 100px);
-                    transform: translate(-50%, 100px);
+                    -webkit-transform: translate(-50%, 112px);
+                    transform: translate(-50%, 112px);
                 }
 
                 :host([showed]) {
@@ -117,7 +103,7 @@ An element used to display a Material Design snackbar.
 
         <div id="matSnackbarWrapper">
             <div id="matSnackbarLabel">{{label}}</div>
-            <template is="dom-if" if="[[actionText]]"><mat-button id="matSnackbarAction" color="[[actionColor]]" data="[[data]]" label="[[actionLabel]]" target="[[target]]" on-xp-activate="_handleAction"></mat-button></template>
+            <template is="dom-if" if="[[actionText]]"><mat-button id="matSnackbarAction" color="[[_computeActionColor(actionColor)]]" data="[[data]]" label="[[actionLabel]]" target="[[target]]" on-xp-activate="_handleAction"></mat-button></template>
         </div>
 
     </template>
@@ -157,12 +143,11 @@ An element used to display a Material Design snackbar.
                  *
                  * @attribute action-color
                  * @type string
-                 * @default "white"
                  */
                 actionColor: {
                     reflectToAttribute: true,
                     type: String,
-                    value: 'white'
+                    value: null
                 },
 
                 /**
@@ -189,6 +174,13 @@ An element used to display a Material Design snackbar.
                     type: Boolean,
                     value: true
                 }
+            },
+
+            /*********************************************************************/
+
+            // COMPUTER
+            _computeActionColor: function (actionColor) {
+                return actionColor || 'white';
             },
 
             /*********************************************************************/
