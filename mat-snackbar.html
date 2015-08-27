@@ -36,86 +36,86 @@ An element used to display a Material Design snackbar.
 
 <dom-module name="mat-snackbar">
 
-    <style>
-        :host {
-            @apply(--mat-font-body);
-            background: hsla(0, 0%, 20%, 1);
-            bottom: 0;
-            box-sizing: border-box;
-            color: hsla(0, 0%, 95%, 1);
-            display: block;
-            left: 0;
-            max-height: 80px;
-            min-height: 48px;
-            overflow: hidden;
-            padding: 14px 24px;
-            position: fixed;
-            right: 0;
-            -webkit-transform: translate(0, 100px);
-            transform: translate(0, 100px);
-            -webkit-transition: -webkit-transform 0.5s;
-            transition: transform 0.5s;
-            visibility: hidden;
-            will-change: -webkit-transform, transform;
-        }
+    <template>
 
-        :host([showed]) {
-            -webkit-transform: translate(0, 0);
-            transform: translate(0, 0);
-            visibility: visible;
-        }
-
-        :host #matSnackbarWrapper {
-            @apply(--layout-horizontal);
-            @apply(--layout-center);
-            opacity: 0;
-            -webkit-transition: opacity 1s;
-            transition: opacity 1s;
-            will-change: opacity;
-        }
-
-        :host([showed]) #matSnackbarWrapper {
-            opacity: 1;
-        }
-
-        :host #matSnackbarLabel {
-            @apply(--layout-flex);
-        }
-
-        :host #matSnackbarAction {
-            margin: -8px -12px;
-        }
-
-        /* TABLET */
-
-        @media (min-width: 960px) {
-
+        <style>
             :host {
-                border-radius: 2px 2px 0 0;
-                left: 50%;
-                max-width: 568px;
-                min-width: 288px;
-                right: auto;
-                -webkit-transform: translate(-50%, 100px);
-                transform: translate(-50%, 100px);
+                @apply(--mat-font-body);
+                background: hsla(0, 0%, 20%, 1);
+                bottom: 0;
+                box-sizing: border-box;
+                color: hsla(0, 0%, 95%, 1);
+                display: block;
+                left: 0;
+                max-height: 80px;
+                min-height: 48px;
+                opacity: 0;
+                overflow: hidden;
+                padding: 14px 24px;
+                position: fixed;
+                right: 0;
+                -webkit-transform: translate(0, 100px);
+                transform: translate(0, 100px);
+                -webkit-transition: opacity 1s, -webkit-transform 0.5s, visibility 1s;
+                transition: opacity 1s, transform 0.5s, visibility 1s;
+                visibility: hidden;
+                will-change: opacity, -webkit-transform, transform, visibility;
+                z-index: 9999;
             }
 
             :host([showed]) {
-                -webkit-transform: translate(-50%, 0px);
-                transform: translate(-50%, 0px);
+                opacity: 1;
+                -webkit-transform: translate(0, 0);
+                transform: translate(0, 0);
+                visibility: visible;
+            }
+
+            :host #matSnackbarWrapper {
+                @apply(--layout-horizontal);
+                @apply(--layout-center);
+            }
+
+            :host([showed]) #matSnackbarWrapper {
+            }
+
+            :host #matSnackbarLabel {
+                @apply(--layout-flex);
             }
 
             :host #matSnackbarAction {
-                margin: -8px -12px -8px 36px;
+                margin: -8px -12px;
             }
-        }
-    </style>
 
-    <template>
+            /* TABLET */
+
+            @media (min-width: 960px) {
+
+                :host {
+                    border-radius: 2px 2px 0 0;
+                    left: 50%;
+                    max-width: 568px;
+                    min-width: 288px;
+                    right: auto;
+                    -webkit-transform: translate(-50%, 100px);
+                    transform: translate(-50%, 100px);
+                }
+
+                :host([showed]) {
+                    -webkit-transform: translate(-50%, 0px);
+                    transform: translate(-50%, 0px);
+                }
+
+                :host #matSnackbarAction {
+                    margin: -8px -12px -8px 36px;
+                }
+            }
+        </style>
+
         <div id="matSnackbarWrapper">
             <div id="matSnackbarLabel">{{label}}</div>
             <template is="dom-if" if="[[actionText]]"><mat-button id="matSnackbarAction" color="[[actionColor]]" data="[[data]]" label="[[actionLabel]]" target="[[target]]" on-xp-activate="_handleAction"></mat-button></template>
         </div>
+
     </template>
 
     <script>
@@ -171,6 +171,19 @@ An element used to display a Material Design snackbar.
                     reflectToAttribute: true,
                     type: String,
                     value: null
+                },
+
+                /**
+                 * If set to true, the overlay will not close by clicking outside.
+                 *
+                 * @attribute auto-hide-disabled
+                 * @type boolean
+                 * @default true
+                 */
+                autoHideDisabled: {
+                    reflectToAttribute: true,
+                    type: Boolean,
+                    value: true
                 }
             },
 
