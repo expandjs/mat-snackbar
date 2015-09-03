@@ -7,7 +7,30 @@ The complete set of contributors may be found at https://expandjs.github.io/CONT
 -->
 
 <!--
-An element used to display a Material Design snackbar.
+An element used to display a [Material Design snackbar](http://www.google.com/design/spec/components/snackbars-toasts.html).
+
+It should be used to send feedback to the user about a specific operation.
+
+```html
+<mat-snackbar label="Your draft has been discarded."></mat-snackbar>
+```
+
+The snackbar also provides an `action` button.
+
+```html
+<mat-snackbar label="Connection timed out. Showing limited messages." action-label="Retry"></mat-snackbar>
+```
+
+---
+
+## Styling
+
+The actions's color can be changed accordingly to the
+[Material Design palette](http://www.google.com/design/spec/style/color.html#color-color-palette).
+
+```html
+<mat-snackbar label="Archived" action-label="Undo" action-color="yellow"></mat-snackbar>
+```
 
 @element mat-snackbar
 @description A custom element used to display a Material Design snackbar
