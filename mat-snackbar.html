@@ -7,7 +7,7 @@ The complete set of contributors may be found at https://expandjs.github.io/CONT
 -->
 
 <!--
-An element used to display a [Material Design snackbar](http://www.google.com/design/spec/components/snackbars-toasts.html).
+A custom element used to display a [Material Design snackbar](http://www.google.com/design/spec/components/snackbars-toasts.html).
 
 It should be used to send feedback to the user about a specific operation.
 
@@ -29,27 +29,28 @@ The actions's color can be changed accordingly to the
 [Material Design palette](http://www.google.com/design/spec/style/color.html#color-color-palette).
 
 ```html
-<mat-snackbar label="Archived" action-label="Undo" action-color="yellow"></mat-snackbar>
+<mat-snackbar action-color="yellow" action-label="Undo" label="Archived"></mat-snackbar>
 ```
 
 @element mat-snackbar
 @description A custom element used to display a Material Design snackbar
-@keywords material design, material snackbar, web app, html5, expandjs, web-components
+@keywords material design, expandjs, web app, custom elements, web-components
 @group accessibility
+
 @homepage http://expandjs.com/elements/mat-snackbar
 @repository https://github.com/ExpandJS/mat-snackbar
 @demo http://expandjs.com/demo/mat-snackbar
 
-@behavior xp-refirer-behavior /bower_components/xp-refirer-behavior/xp-refirer-behavior.html
-@behavior xp-toast-behavior /bower_components/xp-toast-behavior/xp-toast-behavior.html
+@behavior xp-snackbar-behavior /bower_components/xp-snackbar-behavior/xp-snackbar-behavior.html
 
-@dependency polymer Polymer/polymer#^1.1.0
-@dependency expandjs ExpandJS/expandjs#0.9.11
-@dependency mat-typography ExpandJS/mat-typography#0.9.11
-@dependency xp-refirer-behavior ExpandJS/xp-refirer-behavior#0.9.11
-@dependency xp-toast-behavior ExpandJS/xp-toast-behavior#0.9.11
+@dependency polymer Polymer/polymer#^1.2.0
+@dependency expandjs ExpandJS/expandjs#0.10.0
+@dependency iron-flex-layout PolymerElements/iron-flex-layout#^1.0.0
+@dependency mat-button ExpandJS/mat-button#0.10.0
+@dependency mat-typography ExpandJS/mat-typography#0.10.0
+@dependency xp-snackbar-behavior ExpandJS/xp-snackbar-behavior#0.10.0
 
-@devDependency mat-demo ExpandJS/mat-demo#0.9.11
+@devDependency mat-demo ExpandJS/mat-demo#0.10.0
 -->
 
 <link rel="import" href="../polymer/polymer.html">
@@ -57,21 +58,20 @@ The actions's color can be changed accordingly to the
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../mat-button/mat-button.html">
 <link rel="import" href="../mat-typography/mat-typography.html">
-<link rel="import" href="../xp-refirer-behavior/xp-refirer-behavior.html">
-<link rel="import" href="../xp-toast-behavior/xp-toast-behavior.html">
+<link rel="import" href="../xp-snackbar-behavior/xp-snackbar-behavior.html">
+<link rel="import" href="../xp-snackbar-behavior/xp-snackbar-styles.html">
 
-<dom-module name="mat-snackbar">
+<dom-module id="mat-snackbar">
 
-    <template>
+    <template strip-whitespace>
 
-        <style include="xp-toast-styles"></style>
+        <style include="xp-snackbar-styles"></style>
 
         <style>
             :host {
                 @apply(--mat-font-body);
                 background: hsla(0, 0%, 20%, 1);
                 bottom: 0;
-                box-sizing: border-box;
                 color: hsla(0, 0%, 95%, 1);
                 left: 0;
                 max-height: 80px;
@@ -82,27 +82,16 @@ The actions's color can be changed accordingly to the
                 transform: translate(0, 100%);
             }
 
-            :host #matSnackbarWrapper {
-                @apply(--layout-horizontal);
-                @apply(--layout-center);
-                opacity: 0;
-                transition: opacity 1s;
-                will-change: opacity;
-            }
-
-            :host([showed]) #matSnackbarWrapper {
-                opacity: 1;
-            }
-
-            :host #matSnackbarLabel {
+            :host .label {
                 @apply(--layout-flex);
             }
 
-            :host #matSnackbarAction {
+            :host .button {
+                color: var(--mat-accent-color, #FFC107);
                 margin: -8px -12px;
             }
 
-            /* TABLET */
+            /* DESKTOP */
 
             @media (min-width: 960px) {
 
@@ -121,15 +110,15 @@ The actions's color can be changed accordingly to the
                     transform: translate(-50%, 0px);
                 }
 
-                :host #matSnackbarAction {
+                :host .button {
                     margin: -8px -12px -8px 36px;
                 }
             }
         </style>
 
-        <div id="matSnackbarWrapper">
-            <div id="matSnackbarLabel">{{label}}</div>
-            <template is="dom-if" if="[[actionLabel]]"><mat-button id="matSnackbarAction" color="[[_computeActionColor(actionColor)]]" data="[[data]]" label="[[actionLabel]]" target="[[target]]" on-xp-activate="_handleActivate"></mat-button></template>
+        <div class="wrapper">
+            <div class="label">[[label]]</div>
+            <mat-button class="button" data="[[data]]" label="[[action]]" target="[[target]]" on-xp-activate="_actionHandler"></mat-button>
         </div>
 
     </template>
@@ -142,82 +131,8 @@ The actions's color can be changed accordingly to the
 
             // BEHAVIORS
             behaviors: [
-                Polymer.XPRefirerBehavior,
-                Polymer.XPToastBehavior
-            ],
-
-            /*********************************************************************/
-
-            /**
-             * Fired when the context element is clicked.
-             *
-             * @event xp-activate
-             * @param {Element} firer
-             * @param {Element} target
-             * @param {*} data
-             * @param {boolean} isActive
-             * @bubbles
-             * @cancelable
-             */
-
-            /*********************************************************************/
-
-            // PROPERTIES
-            properties: {
-
-                /**
-                 * The snackbar's action color.
-                 *
-                 * @attribute action-color
-                 * @type string
-                 */
-                actionColor: {
-                    reflectToAttribute: true,
-                    type: String,
-                    value: null
-                },
-
-                /**
-                 * The snackbar's action label.
-                 *
-                 * @attribute action-label
-                 * @type string
-                 */
-                actionLabel: {
-                    reflectToAttribute: true,
-                    type: String,
-                    value: null
-                },
-
-                /**
-                 * If set to true, the overlay will not close by clicking outside.
-                 *
-                 * @attribute auto-hide-disabled
-                 * @type boolean
-                 * @default true
-                 */
-                autoHideDisabled: {
-                    reflectToAttribute: true,
-                    type: Boolean,
-                    value: true
-                }
-            },
-
-            /*********************************************************************/
-
-            // COMPUTER
-            _computeActionColor: function (actionColor) {
-                return actionColor || 'white';
-            },
-
-            /*********************************************************************/
-
-            // HANDLER
-            _handleActivate: function (event) {
-
-                // Refiring
-                this.refire(event, {firer: this});
-            }
+                Polymer.XPSnackbarBehavior
+            ]
         });
     </script>
 
