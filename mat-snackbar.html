@@ -78,7 +78,6 @@ The actions's color can be changed accordingly to the
                 min-height: 48px;
                 padding: 14px 24px;
                 right: 0;
-                -webkit-transform: translate(0, 100%);
                 transform: translate(0, 100%);
             }
 
@@ -101,12 +100,10 @@ The actions's color can be changed accordingly to the
                     max-width: 568px;
                     min-width: 288px;
                     right: auto;
-                    -webkit-transform: translate(-50%, 112px);
                     transform: translate(-50%, 112px);
                 }
 
                 :host([showed]) {
-                    -webkit-transform: translate(-50%, 0px);
                     transform: translate(-50%, 0px);
                 }
 
@@ -118,7 +115,7 @@ The actions's color can be changed accordingly to the
 
         <div class="wrapper">
             <div class="label">[[label]]</div>
-            <mat-button class="button" data="[[data]]" label="[[action]]" target="[[target]]" on-xp-activate="_actionHandler"></mat-button>
+            <mat-button class="button" data="[[data]]" label="[[button]]" target="[[target]]" on-xp-activate="_actionHandler"></mat-button>
         </div>
 
     </template>
